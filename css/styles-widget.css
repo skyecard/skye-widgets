@@ -1,0 +1,98 @@
+@font-face {
+    font-family: "chapeau";
+    src: url(../fonts/chapeauweb-regular.woff) format("woff");
+    font-weight: 500;
+}
+
+@font-face {
+    font-family: "chapeau";
+    src: url(../fonts/chapeauweb-bold.woff) format("woff");
+    font-weight: bold;
+}
+
+@font-face {
+    font-family: "chapeau";
+    src: url(../fonts/chapeauweb-light.woff) format("woff");
+    font-weight: lighter;
+}
+
+#skye-tag p {
+    margin: 1.5em;
+    font-weight: normal;
+    font-family: 'chapeau';
+    line-height: 5px;
+}
+
+a#skye-tag {
+    cursor: pointer;
+    color: #3d4246;
+}
+
+#skye-tag, #skye-tag:hover{
+    text-decoration: none!important;
+}
+
+#skye-tag {
+    font-size: 14px;    
+    display: block;    
+    box-shadow: none!important;
+    overflow: hidden;
+}
+
+
+#skye-tag .more-info {
+    font-size: .7em;
+    vertical-align: middle;
+    text-decoration: underline;
+}
+
+.iframe-container {
+    overflow: hidden;
+    padding-top: 56.25%;
+    position: relative;
+    height: 100%;
+}
+
+.iframe-container iframe {
+    border: 0;
+    height: 100%;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 100%;
+}
+
+.iframe-container.mobile {
+    height: 85%;
+}
+
+.jquery-modal .modal.widget a.close-modal {
+    top: 10.5px;
+    right: 10.5px;
+    background-image: url(//widgets.skyecard.com.au.s3-ap-southeast-2.amazonaws.com/content/images/X.png);
+    height: 20px;
+}
+
+@media screen and (max-width:576px) {
+    .jquery-modal .modal.widget {
+        height: 1500px;
+        max-width: 380px;
+    }
+}
+
+@media screen and (min-width:576px) {
+    .jquery-modal .modal.widget {
+        height: 940px;
+        max-width: 940px;
+    }
+}
+
+@media screen and (max-width:480px) {
+    .jquery-modal .modal.widget {        
+        /*max-width: 370px;*/
+        height: 1400px;
+        overflow-y: scroll;
+        -webkit-overflow-scrolling: touch;
+
+    }
+}

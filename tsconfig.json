@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "moduleResolution": "node",
+    "module": "commonjs",
+    "target": "es5"
+  },
+  "paths": {
+    "jquery": [ "node_modules/jquery/dist/jquery" ]
+  },
+  "files": [
+    "./src/skye-widget.ts",  
+    "./src/skye-calc.ts",
+    "./src/config.ts",
+    "./src/modal-injector.ts",
+  ],
+  "compileOnSave": true
+}

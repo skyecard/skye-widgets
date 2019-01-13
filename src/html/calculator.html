@@ -1,0 +1,254 @@
+<html>
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="../styles/calculator.min.css">
+</head>
+<body>
+	<div id="wrapper">		
+		<div class="calculator-container" id="calculator">			
+			<div id="repayments">
+				<h2><strong>Repayments</strong> <br class="show-small">calculator</h2> 
+				<div id="repayment-content">
+					<p>Calculate your weekly or monthly repayments required to repay your purchase within the chosen Interest Free term.</p>
+					<h3>Finance amount</h3> 		
+					<div class="exact-amount-container">
+						<div><input pattern="[0-9]*" placeholder="Enter amount" type="text" class="" id="finance-amount"></div>
+					</div> 				
+					<div class="vpad-xl"></div> 
+					<label id="amount-error" style="display: none;">Please select an Interest Free Term.</label> 
+					<h3 class="">Interest Free term</h3> 
+					<div class="vpad-lg"></div> 
+					<div class="select-element" id="select-element">
+						<select id="skye-options"></select>
+					</div> 
+					<label class="error" style="display: none;">Please select an Interest Free Term.</label> 
+					<div class="vpad-sm"></div> 
+					<hr> 
+					<div class="controls">
+						<button class="button" id="btn">Calculate</button>
+					</div> <hr> 
+				</div>
+				<div class="footnotes">(Note: this calculator does not apply to promotional interest bearing offers).</div>
+			</div> <!---->
+		</div>
+		<div id="results" style="display: none;">
+			<div class="back"><a id="back" style="cursor: pointer;">BACK</a></div> 
+			<div class="calculator-container">
+				<div id="repayment-results"><h2>Your repayments could be</h2> <hr> 
+					<ul class="results" id="results">
+						<li class="block" id="weekly"><!----> 
+							<p>weekly</p>
+						</li> 
+						<li><span class="divider">OR</span></li> 
+						<li class="block" id="monthly"><!----> 
+							<p>monthly</p>
+						</li>
+					</ul> <hr> 			
+					<hr>
+					<div class="controls" id="controls">				
+						<a id="button" class="button borderless static" onclick="openSkye()">APPLY NOW</a>
+					</div> <hr> 
+					<div class="footnotes">
+						<p>
+							<strong>IMPORTANT INFORMATION ABOUT THE REPAYMENTS CALCULATOR</strong> <br>
+							*Approved Skye Mastercard applicants only. Fees, terms, conditions & minimum finance amount apply, incl $99 Annual Fee charged on the account open date and annually on the anniversary of that date.  Annual Fee must be paid in full within 90 days or it will attract interest. Minimum monthly repayment may be required. Total amount payable by <x> equal monthly instalments. If you fail to pay a fixed monthly repayment, interest, (charged at the standard Expired Promotional Rate) is payable on that amount. See skyecard.com.au for current interest rates. Credit provided by FlexiCards Australia Pty Ltd ABN 31 099 651 877 Australian Credit Licence number 247415. FlexiCards Australia is a subsidiary of FlexiGroup Limited</p>
+					</div><!---->
+				</div> <!---->
+			</div>
+		</div>
+	</div>
+ <script>
+      var query = window.location.search.substring(1);      
+      var qs = parse_query_string(query);
+
+      if (qs.mobile == 'true')
+      {
+        var containerElements = document.getElementsByClassName('calculator-container');    
+        var backElements = document.getElementsByClassName('back');        
+
+        for (var x = 0; x < containerElements.length; x++)
+        {            
+            containerElements[x].className += ' mobile';
+        } 
+
+        for (var y = 0; y < backElements.length; y++)
+        {            
+            backElements[y].className += ' mobile';
+        } 
+      }
+
+      if (qs.mode == 'inpage')
+      {
+      	var containerInPageElements = document.getElementsByClassName('calculator-container'); 
+
+      	for (var w = 0; w < containerInPageElements.length; w++)
+        {            
+            containerInPageElements[w].className += ' inpage';
+        } 
+      }
+
+      function parse_query_string(query) {
+        var vars = query.split("&");
+        var query_string = {};
+        for (var i = 0; i < vars.length; i++) {
+            var pair = vars[i].split("=");
+            var key = decodeURIComponent(pair[0]);
+            var value = decodeURIComponent(pair[1]);
+            // If first entry with this name
+            if (typeof query_string[key] === "undefined") {
+                query_string[key] = decodeURIComponent(value);
+            // If second entry with this name
+            } else if (typeof query_string[key] === "string") {
+                var arr = [query_string[key], decodeURIComponent(value)];
+                query_string[key] = arr;
+                // If third or later entry with this name
+            } else {
+                query_string[key].push(decodeURIComponent(value));
+            }
+        }
+        return query_string;
+    }
+   
+    var selectPlans = document.getElementById("skye-options");
+   
+	var inputAmount = document.getElementById("finance-amount");
+	inputAmount.setAttribute('value',qs.productPrice);
+    selectPlans.value = qs.terms;                  
+	callTerms(qs.id,inputAmount)      
+
+	function callTerms(merchantId, inputAmount) {		
+		var index,i;
+
+		console.log(inputAmount)			
+		console.log('call terms!');
+		if ( inputAmount.value != null || inputAmount.value != '' || inputAmount.value >= 250)
+		{			    
+			window.jsonpCallback = function(data) {
+    		// handle requested data from server    			    			
+    		var selectPlans = document.getElementById("skye-options");
+  				selectPlans.options.length = 0;   				
+  				if (data.plans.length > 0)  			
+  				{
+    				for (index = 0; index < data.plans.length; index++)
+    				{
+    					selectPlans.options[index] = new Option(data.plans[index].prefIntPeriod+' Months', data.plans[index].prefIntPeriod)
+    				}    				  					    		
+    			} else {
+    				selectPlans.options[0] = new Option(qs.term+ ' Months',qs.term)
+    				selectPlans.value = qs.term;
+    			}
+			};
+			var amtValue = inputAmount.value;
+			console.log('amount value: '+amtValue)			
+			var scriptEl = document.createElement('script');
+			scriptEl.setAttribute('src','https://0eyvhkany4.execute-api.ap-southeast-2.amazonaws.com/dev/?id='+qs.id+'&amount='+amtValue+'&callback=jsonpCallback');
+
+			document.body.appendChild(scriptEl);
+		} else {
+			console.log('empty amount!!!')
+			for (var i=0; i<selectPlans.length; i++){  						
+     			selectPlans.remove(i);
+  			}
+			var emptyAmount = document.getElementById("amount-error");
+			emptyAmount.setAttribute('style','');
+		}
+	}
+
+	document.getElementById('finance-amount').addEventListener('change', function() {
+		
+		var newAmount = document.getElementById("finance-amount");		
+		if (newAmount.value != qs.productPrice)
+		{
+			console.log('changed amount:'+newAmount.value)
+			callTerms(qs.id,newAmount)
+		}
+	});
+</script>
+<script>
+	"use strict";
+	function show_selected() {
+		var inputAmount = document.getElementById('finance-amount');
+		var amtValue = inputAmount.value;
+    	var termSelector = document.getElementById('skye-options');
+    	var termValue = termSelector[termSelector.selectedIndex].value;    	
+
+    	var monthlyRoundedDownAmount = compute_monthly(amtValue, termValue)
+    	
+        var weeklyRoundedDownAmount =compute_weekly(monthlyRoundedDownAmount)
+
+        append_results(amtValue, termValue, weeklyRoundedDownAmount, monthlyRoundedDownAmount)
+        document.getElementById("calculator").style.display = 'none';
+        document.getElementById("results").style = '';
+	}
+
+	function compute_monthly(amtValue, termValue) {
+		var monthlyAmountDividedBy = amtValue / termValue;
+        var monthlyRoundedDownAmount = Math.floor(monthlyAmountDividedBy * Math.pow(10, 2)) / Math.pow(10, 2);
+
+		return monthlyRoundedDownAmount
+	}
+
+	function compute_weekly(monthlyRoundedDownAmount) {
+		var weeklyRoundedDownAmount = Math.floor((monthlyRoundedDownAmount * 12/52) * Math.pow(10,2)) / Math.pow(10, 2);
+
+		return weeklyRoundedDownAmount
+
+	}
+
+	function append_results(amtValue, termValue, weeklyRoundedDownAmount, monthlyRoundedDownAmount) {	
+		var removeMonthly = document.getElementById('monthly-amount');	
+		if (removeMonthly != null)
+		{
+			removeMonthly.parentNode.removeChild(removeMonthly);
+		}
+		var removeWeekly = document.getElementById('weekly-amount');	
+		if (removeWeekly != null)
+		{
+			removeWeekly.parentNode.removeChild(removeWeekly);
+		}
+		var removeStatement = document.getElementById('statement');	
+		if (removeStatement != null)
+		{
+			removeStatement.parentNode.removeChild(removeStatement);
+		}
+		var monthtlyNode = document.createElement('h2');
+		monthtlyNode.setAttribute('id','monthly-amount');
+		var weeklyNode = document.createElement('h2');
+		weeklyNode.setAttribute('id','weekly-amount');
+		var weeklyTextNode = document.createTextNode('$ '+weeklyRoundedDownAmount.toFixed(2));
+        weeklyNode.appendChild(weeklyTextNode);
+        var weeklyLi = document.getElementById('weekly')
+        weeklyLi.insertBefore(weeklyNode, weeklyLi.childNodes[0])		
+
+        var monthlyTextNode = document.createTextNode('$ '+monthlyRoundedDownAmount.toFixed(2));
+        monthtlyNode.appendChild(monthlyTextNode);
+        var monthlyLi = document.getElementById('monthly');
+        monthlyLi.insertBefore(monthtlyNode, monthlyLi.childNodes[0]) 
+		
+		var parStatement =  document.createElement('p');        		
+		parStatement.setAttribute('id','statement');
+		var parStatementText = document.createTextNode('If you choose Skye Mastercard to finance a purchase of $'+amtValue+' over an Interest Free Term of '+termValue+' months');
+		parStatement.appendChild(parStatementText);
+		var hr =  document.createElement('hr');        				
+		var resultsBlock = document.getElementById('repayment-results');
+		resultsBlock.insertBefore(parStatement, resultsBlock.childNodes[7]);
+	}
+
+	function show_previous() {
+		document.getElementById("calculator").style.display = '';
+        document.getElementById("results").style.display = 'none';        
+	}
+
+	document.getElementById('btn').addEventListener('click', show_selected);
+	document.getElementById('back').addEventListener('click', show_previous);
+</script>
+<script>
+    function openSkye() {
+        var query1 = window.location.search.substring(1); 
+        var qs1 = query.split("&");
+        var id = qs1[0].toString();
+        window.open('https://apply.flexicards.com.au/seller='+id.replace('id=',''), '_blank', '', false);
+     }
+  </script>
+</body>
+</html>
