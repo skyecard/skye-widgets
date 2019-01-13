@@ -18,6 +18,16 @@ This widget builder uses the following key technologies:
 * [jquery-modal](http://jquerymodal.com/)
 
 # Usage
-In the location you require the banner, use the following markup:
+In the location you require the widget, use the following markup:
+
+## Widget
+```
+<script id="skye-widget" src="/skye-widget.js?id=AAA&productPrice=0"></script>
+```
+
+## Calculator
+```
+<script id="skye-widget" src="/skye-calc.js?id=AAA&productPrice=0"></script>
+```
 
 The script will bring in all of its CSS and dependencies, and register the button click events Guide: Installation guide is located at https://tools.skyecard.com.au/node/85
