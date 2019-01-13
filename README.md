@@ -30,4 +30,6 @@ In the location you require the widget, use the following markup:
 <script id="skye-widget" src="/skye-calc.js?id=AAA&productPrice=0"></script>
 ```
 
-The script will bring in all of its CSS and dependencies, and register the button click events Guide: Installation guide is located at https://tools.skyecard.com.au/node/85
+The script will bring in all of its CSS and dependencies, and register the button click events 
+
+Guide: Installation guide is located at https://tools.skyecard.com.au/node/85
