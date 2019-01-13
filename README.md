@@ -10,12 +10,12 @@ npm run build
 
 # Dependencies
 This widget builder uses the following key technologies:
-* nodejs
-* npm
-* webpack
-* typescript
+* [nodejs](https://nodejs.org/en/)
+* [npm](https://www.npmjs.com/get-npm)
+* [webpack](https://webpack.js.org/guides/getting-started/)
+* [typescript](https://www.typescriptlang.org/#download-links)
 * jquery
-* jquery-modal
+* [jquery-modal](http://jquerymodal.com/)
 
 # Usage
 In the location you require the banner, use the following markup:
