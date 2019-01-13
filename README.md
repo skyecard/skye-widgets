@@ -14,7 +14,7 @@ This widget builder uses the following key technologies:
 * [npm](https://www.npmjs.com/get-npm)
 * [webpack](https://webpack.js.org/guides/getting-started/)
 * [typescript](https://www.typescriptlang.org/#download-links)
-* jquery
+* [jquery](https://www.npmjs.com/package/jquery)
 * [jquery-modal](http://jquerymodal.com/)
 
 # Usage
