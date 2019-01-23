@@ -49,8 +49,7 @@ export class ModalInjector {
 
         if (modalId == 'calc-dialog-'){
             modalStyle = 'height: 940px; max-width: 700px;';
-        }
-        
+        }        
         const bodyTag = 'body';
         const modalDiv =
             `<div id='${modalId}${productPrice}' class='modal widget' style=\"`+modalStyle+`\">

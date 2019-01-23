@@ -5,9 +5,15 @@
 //   baseContentUrl = 'https://YOUR-URL'
 
 export class Config {
-    public static baseContentUrl = 'http://widgets.skyecard.com.au.s3-ap-southeast-2.amazonaws.com';    // for remote deploy
+    //public static baseContentUrl = 'http://widgets.skyecard.com.au.s3-ap-southeast-2.amazonaws.com';    // for remote deploy
+    public static baseContentUrl = 'https://d1y94doel0eh42.cloudfront.net'; 
     //public static baseContentUrl = './dist';       // for local testing
-    public static skyePlansUrl = 'https://0eyvhkany4.execute-api.ap-southeast-2.amazonaws.com/dev/'
+    //Skye plans url
+    // Point to UAT
+    //public static skyePlansUrl = 'https://0eyvhkany4.execute-api.ap-southeast-2.amazonaws.com/dev/';    
+    //public static skyePlansUrl = 'https://um1fnbwix7.execute-api.ap-southeast-2.amazonaws.com/dev/';
+    // Point to Prod
+    public static skyePlansUrl = 'https://vyrvuhxi9a.execute-api.ap-southeast-2.amazonaws.com/production/';
 
     // price-info modal
     public static priceInfoModalId = 'skye-dialog-';

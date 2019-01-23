@@ -40,6 +40,10 @@ module.exports = {
             {
                 from : './src/styles/',
                 to : './content/styles'
+            },
+            {
+                from : './src/images/',
+                to : './content/images'
             }
         ]),
         new webpack.SourceMapDevToolPlugin({

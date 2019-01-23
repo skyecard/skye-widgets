@@ -117,35 +117,30 @@
 	callTerms(qs.id,inputAmount)      
 
 	function callTerms(merchantId, inputAmount) {		
-		var index,i;
-
-		console.log(inputAmount)			
-		console.log('call terms!');
+		var index,i;		
 		if ( inputAmount.value != null || inputAmount.value != '' || inputAmount.value >= 250)
-		{			    
+		{			    			    			
 			window.jsonpCallback = function(data) {
-    		// handle requested data from server    			    			
+    		// handle requested data from server      		
     		var selectPlans = document.getElementById("skye-options");
-  				selectPlans.options.length = 0;   				
-  				if (data.plans.length > 0)  			
+  				selectPlans.options.length = 0;   	  				
+  				if (data.length > 0)  			
   				{
-    				for (index = 0; index < data.plans.length; index++)
+    				for (index = 0; index < data.length; index++)
     				{
-    					selectPlans.options[index] = new Option(data.plans[index].prefIntPeriod+' Months', data.plans[index].prefIntPeriod)
+    					selectPlans.options[index] = new Option(data[index].PrefIntPeriod+' Months', data[index].PrefIntPeriod)
     				}    				  					    		
     			} else {
-    				selectPlans.options[0] = new Option(qs.term+ ' Months',qs.term)
-    				selectPlans.value = qs.term;
+    				selectPlans.options[0] = new Option(qs.terms+ ' Months',qs.terms)
+    				selectPlans.value = qs.terms;
     			}
 			};
-			var amtValue = inputAmount.value;
-			console.log('amount value: '+amtValue)			
-			var scriptEl = document.createElement('script');
-			scriptEl.setAttribute('src','https://0eyvhkany4.execute-api.ap-southeast-2.amazonaws.com/dev/?id='+qs.id+'&amount='+amtValue+'&callback=jsonpCallback');
+			var amtValue = inputAmount.value;			
+			var scriptEl = document.createElement('script');			
+			scriptEl.setAttribute('src','https://vyrvuhxi9a.execute-api.ap-southeast-2.amazonaws.com/production/?id='+qs.id+'&amount='+amtValue+'&callback=jsonpCallback');
 
 			document.body.appendChild(scriptEl);
 		} else {
-			console.log('empty amount!!!')
 			for (var i=0; i<selectPlans.length; i++){  						
      			selectPlans.remove(i);
   			}
@@ -159,7 +154,6 @@
 		var newAmount = document.getElementById("finance-amount");		
 		if (newAmount.value != qs.productPrice)
 		{
-			console.log('changed amount:'+newAmount.value)
 			callTerms(qs.id,newAmount)
 		}
 	});
