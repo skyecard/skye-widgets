@@ -45,7 +45,7 @@ change "baseContentUrl"
 in /src/styles/*.css
 in /css/*.css
 
-change font-face url (in all 3 font-faces) change #oxipay-img background-image url
+change font-face url (in all 3 font-faces) change image url
 
 All .css files have to be compile into .min.css files. To do so, go to project root folder and use command:
 ```
