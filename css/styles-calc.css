@@ -1,18 +1,18 @@
 @font-face {
     font-family: "chapeau";
-    src: url(../fonts/chapeauweb-regular.woff) format("woff");
+    src: url(//s3-ap-southeast-2.amazonaws.com/widgets.skyecard.com.au/content/fonts/chapeauweb-regular.woff) format("woff");
     font-weight: 500;
 }
 
 @font-face {
     font-family: "chapeau";
-    src: url(../fonts/chapeauweb-bold.woff) format("woff");
+    src: url(//s3-ap-southeast-2.amazonaws.com/widgets.skyecard.com.au/content/fonts/chapeauweb-bold.woff) format("woff");
     font-weight: bold;
 }
 
 @font-face {
     font-family: "chapeau";
-    src: url(../fonts/chapeauweb-light.woff) format("woff");
+    src: url(//s3-ap-southeast-2.amazonaws.com/widgets.skyecard.com.au/content/fonts/chapeauweb-light.woff) format("woff");
     font-weight: lighter;
 }
 

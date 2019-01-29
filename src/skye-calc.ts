@@ -107,8 +107,7 @@ let widget;
         let el = jq(selector, document.body);
         
         if (el.exists()) {
-            productPrice = extractPrice(el);
-
+            productPrice = extractPrice(el);            
             if (productPrice)
             {
                 jq.when(manyRequests(merchantId, productPrice, Config.skyePlansUrl)).then( function (skyePlans: SkyePlan) {                        
@@ -213,10 +212,7 @@ function generateWidget(merchantId: string, skyePlans: SkyePlan, productPrice: n
                             <p><b>$${weeklyRoundedDownProductPrice.toFixed(2)}</b> weekly payments </p><p>Interest free with <img src=\"`+Config.baseContentUrl+`/content/images/skye_logo_63x12.png\"> <span class="more-info">more info</span></p>
                         </a>`;
 
-                templatenologo = `<a href=\"#calc-dialog-`+productPrice+`\" id=\"skye-tag\" class=\"`+productPrice+`\">
-                                <p>or <b>$${weeklyRoundedDownProductPrice.toFixed(2)}</b> weekly payments</p><p>Interest free - <strong>find out how</strong></p>
-                                <br>
-                            </a>`;
+                templatenologo = `<a href=\"#skye-dialog-`+productPrice+`\" id=\"skye-tag\" class=\"`+productPrice+`\">\n<p>or <b>$`+weeklyRoundedDownProductPrice.toFixed(2)+`</b>/week </p></a>`;
             } else {
 
                 if (mode == 'button')
@@ -241,10 +237,7 @@ function generateWidget(merchantId: string, skyePlans: SkyePlan, productPrice: n
                             <p>`+productPriceDivisor.toString()+` monthly payments of <b>$${roundedDownProductPrice.toFixed(2)}</b></p><p>Interest free with <img src=\"`+Config.baseContentUrl+`/content/images/skye_logo_63x12.png\"> <span class="more-info">more info</span></p>
                         </a>`;
 
-                        templatenologo = `<a href=\"#calc-dialog-`+productPrice+`\" id=\"skye-tag\" class=\"`+productPrice+`\">
-                                <p>or `+productPriceDivisor.toString()+`monthly payments of <b>$${roundedDownProductPrice.toFixed(2)}</b></p><p>Interest free - <strong>find out how</strong></p>
-                                <br>
-                            </a>`;
+                        templatenologo = `<a href=\"#skye-dialog-`+productPrice+`\" id=\"skye-tag\" class=\"`+productPrice+`\">\n<p>or <b>$${roundedDownProductPrice.toFixed(2)}</b>/month </p></a>`;
                     }
                 }
             }

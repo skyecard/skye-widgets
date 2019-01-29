@@ -21,9 +21,9 @@ export class ModalInjector {
             let scripts = document.getElementsByTagName('script');
             return scripts[scripts.length - 1];
         })();
-
+        
         // if the element isn't passed in already
-        if (!element) {
+        if (!element) {        
             element = this.jQuery(currentScript);
         }
 
@@ -54,7 +54,7 @@ export class ModalInjector {
         const modalDiv =
             `<div id='${modalId}${productPrice}' class='modal widget' style=\"`+modalStyle+`\">
                 <div class="iframe-container">
-                    <iframe src='${url}?id=${merchantId}`+termValue+`&productPrice=`+productPrice+`' frameborder="0" scrolling="yes"></iframe>
+                    <iframe src='${url}?id=${merchantId}`+termValue+`&productPrice=`+productPrice+`' frameborder="0" scrolling="no"></iframe>
                 </div>                
             </div>`;
         const body = this.jQuery(bodyTag);

@@ -1,18 +1,18 @@
 @font-face {
     font-family: "chapeau";
-    src: url(../fonts/chapeauweb-regular.woff) format("woff");
+    src: url(//d1y94doel0eh42.cloudfront.net/content/fonts/chapeauweb-regular.woff) format("woff");
     font-weight: 500;
 }
 
 @font-face {
     font-family: "chapeau";
-    src: url(../fonts/chapeauweb-bold.woff) format("woff");
+    src: url(//d1y94doel0eh42.cloudfront.net/content/fonts/chapeauweb-bold.woff) format("woff");
     font-weight: bold;
 }
 
 @font-face {
     font-family: "chapeau";
-    src: url(../fonts/chapeauweb-light.woff) format("woff");
+    src: url(//d1y94doel0eh42.cloudfront.net/content/fonts/chapeauweb-light.woff) format("woff");
     font-weight: lighter;
 }
 
@@ -270,8 +270,8 @@ button {
 
 @font-face {
     font-family: "skye-icons";
-    src: url(../fonts/skye-icons.eot);
-    src: url(../fonts/skye-icons.eot#iefix) format("embedded-opentype"), url(../fonts/skye-icons.woff) format("woff"), url(../fonts/skye-icons.ttf) format("truetype"), url(../fonts/skye-icons.svg#skye-icons) format("svg");
+    src: url(//d1y94doel0eh42.cloudfront.net/content/fonts/skye-icons.eot);
+    src: url(//d1y94doel0eh42.cloudfront.net/content/fonts/skye-icons.eot#iefix) format("embedded-opentype"), url(//d1y94doel0eh42.cloudfront.net/content/fonts/skye-icons.woff) format("woff"), url(//d1y94doel0eh42.cloudfront.net/content/fonts/skye-icons.ttf) format("truetype"), url(//d1y94doel0eh42.cloudfront.net/content/fonts/skye-icons.svg#skye-icons) format("svg");
     font-weight: normal;
     font-style: normal;
 }
