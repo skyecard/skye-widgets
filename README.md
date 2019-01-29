@@ -33,12 +33,12 @@ In the location you require the widget, use the following markup:
 
 The script will bring in all of its CSS and dependencies, and register the button click events 
 
-Guide: Installation guide is located at https://tools.skyecard.com.au/digital/widgets
+Guide: Setup guide is located at https://tools.skyecard.com.au/digital/widgets
 
 # Local Test
 To switch between local testing and online deployment, you will make changes in the following 2 places:
 
-in /src/config.ts (/src/nz/config.ts for New Zealand):
+in /src/config.ts:
 
 change "baseContentUrl"
 
