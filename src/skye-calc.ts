@@ -38,6 +38,7 @@ let widget;
     let max: number;
     let used_in: string;
     let element: any;    
+    let skyePlansUrl: string;
     
     // You can pass in button element class and button text
     let buttonStyle: string;
@@ -51,6 +52,7 @@ let widget;
     jq.fn.exists = function () {
         return this.length !== 0;
     };
+    
 
     // get current script
     scriptElement = getCurrentScript();
@@ -75,12 +77,18 @@ let widget;
     element = (getParameterByName('element', srcString))? jq(getParameterByName('element', srcString)) : jq(scriptElement);
 
     let priceStr = getParameterByName('productPrice', srcString);
+    
+     if (debug) {
+        skyePlansUrl = Config.skyePlansUrlDev;
+     } else {
+         skyePlansUrl = Config.skyePlansUrlProd;
+     }
 
     if (priceStr) {
         priceStr = priceStr.replace(/^\D+/, '');
         productPrice = parseFloat(priceStr.replace(',', ''));
 
-        jq.when(manyRequests(merchantId, productPrice, Config.skyePlansUrl)).then( function (skyePlans: SkyePlan) {                        
+        jq.when(manyRequests(merchantId, productPrice, skyePlansUrl)).then( function (skyePlans: SkyePlan) {                        
             const template: string = generateWidget(merchantId, skyePlans, productPrice, noLogo, min, max, used_in, term, mode, buttonStyle, buttonText);
         
             if (Object.keys(skyePlans).length > 0)
@@ -110,7 +118,7 @@ let widget;
             productPrice = extractPrice(el);            
             if (productPrice)
             {
-                jq.when(manyRequests(merchantId, productPrice, Config.skyePlansUrl)).then( function (skyePlans: SkyePlan) {                        
+                jq.when(manyRequests(merchantId, productPrice, skyePlansUrl)).then( function (skyePlans: SkyePlan) {                        
                     const template: string = generateWidget(merchantId, skyePlans, productPrice, noLogo, min, max, used_in, term, mode, buttonStyle, buttonText);
         
                     if (Object.keys(skyePlans).length > 0)
@@ -130,11 +138,11 @@ let widget;
             if (monitor){
                 setInterval(function(){
                     let el = jq(selector, document.body);
-                    updatePrice(el, jq, noLogo, min, max, used_in, merchantId, term, mode, buttonStyle, buttonText);
+                    updatePrice(el, jq, noLogo, min, max, used_in, merchantId, term, mode, buttonStyle, buttonText, skyePlansUrl);
                 },1000);
             } else {
                 el.on("DOMSubtreeModified", function(e) {
-                    updatePrice(jq(e.target), jq, noLogo, min, max, used_in, merchantId, term, mode, buttonStyle, buttonText);
+                    updatePrice(jq(e.target), jq, noLogo, min, max, used_in, merchantId, term, mode, buttonStyle, buttonText, skyePlansUrl);
                 });
             }
         }
@@ -147,7 +155,7 @@ let widget;
         }
     }
 
-    jq(document).on('click','.'+productPrice.toString(), function() {
+    jq(document).on('click','.'+productPrice.toString().replace('.','-'), function() {
         $(this).modal();         
         return false;   
     })
@@ -175,20 +183,21 @@ function generateWidget(merchantId: string, skyePlans: SkyePlan, productPrice: n
     let templateCheckout;
     let templatenologo;
     let productPriceDivisor;
+    let productPriceStr = productPrice.toString().replace('.','-');
         
     term? productPriceDivisor = term : productPriceDivisor = skyePlans[Object.keys(skyePlans).length - 1].PrefIntPeriod;
 
     if (productPrice < min){
-        template = `<a href=\"#calc-dialog-`+productPrice+`\" class=\"`+productPrice+`\" id=\"skye-tag\">
+        template = `<a href=\"#calc-dialog-`+productPriceStr+`\" class=\"`+productPriceStr+`\" id=\"skye-tag\">
                             <p>or </p><p>Interest free with <img src=\"`+Config.baseContentUrl+`/content/images/skye_logo_63x12.png\"></p>
                             <br>
                         </a>`;
 
-        templateCheckout = `<a href=\"#calc-dialog-`+productPrice+`\" class=\"`+productPrice+`\" id=\"skye-tag\">
+        templateCheckout = `<a href=\"#calc-dialog-`+productPriceStr+`\" class=\"`+productPriceStr+`\" id=\"skye-tag\">
                             <p>Interest free with <img src=\"`+Config.baseContentUrl+`/content/images/skye_logo_63x12.png\"></p>
                         </a>`;
 
-        templatenologo = `<a href=\"#calc-dialog-`+productPrice+`\" class=\"`+productPrice+`\" id=\"skye-tag\" rel="modal:open">
+        templatenologo = `<a href=\"#calc-dialog-`+productPriceStr+`\" class=\"`+productPriceStr+`\" id=\"skye-tag\" rel="modal:open">
                                 <p>or </p><p>Interest free - <strong>find out how</strong></p>
                                 <br>
                             </a>`;
@@ -203,41 +212,41 @@ function generateWidget(merchantId: string, skyePlans: SkyePlan, productPrice: n
             if (mode == 'weekly')
             {
                 let weeklyRoundedDownProductPrice = Math.floor((roundedDownProductPrice * 12/52) * Math.pow(10,2)) / Math.pow(10, 2);
-                template = `<a href=\"#calc-dialog-`+productPrice+`\" id=\"skye-tag\" class=\"`+productPrice+`\">
+                template = `<a href=\"#calc-dialog-`+productPriceStr+`\" id=\"skye-tag\" class=\"`+productPriceStr+`\">
                             <p>or <b>$${weeklyRoundedDownProductPrice.toFixed(2)}</b> weekly payments </p><p>Interest free with <img src=\"`+Config.baseContentUrl+`/content/images/skye_logo_63x12.png\"> <span class="more-info">more info</span></p>
                             <br>
                         </a>`;
 
-                templateCheckout = `<a href=\"#calc-dialog-`+productPrice+`\" id=\"skye-tag\" class=\"`+productPrice+`\">
+                templateCheckout = `<a href=\"#calc-dialog-`+productPriceStr+`\" id=\"skye-tag\" class=\"`+productPriceStr+`\">
                             <p><b>$${weeklyRoundedDownProductPrice.toFixed(2)}</b> weekly payments </p><p>Interest free with <img src=\"`+Config.baseContentUrl+`/content/images/skye_logo_63x12.png\"> <span class="more-info">more info</span></p>
                         </a>`;
 
-                templatenologo = `<a href=\"#skye-dialog-`+productPrice+`\" id=\"skye-tag\" class=\"`+productPrice+`\">\n<p>or <b>$`+weeklyRoundedDownProductPrice.toFixed(2)+`</b>/week </p></a>`;
+                templatenologo = `<a href=\"#skye-dialog-`+productPriceStr+`\" id=\"skye-tag\" class=\"`+productPriceStr+`\">\n<p>or <b>$`+weeklyRoundedDownProductPrice.toFixed(2)+`</b>/week </p></a>`;
             } else {
 
                 if (mode == 'button')
                 {
                     buttonStyle? buttonStyle = buttonStyle : buttonStyle = `button-white`;
                     buttonText? buttonText = buttonText : buttonText = `Calculate`;
-                    template = `<a href=\"#calc-dialog-`+productPrice+`\" id=\"skye-tag-button\" class=\"`+buttonStyle+` `+productPrice+`\">`+buttonText+`</a>`;
+                    template = `<a href=\"#calc-dialog-`+productPriceStr+`\" id=\"skye-tag-button\" class=\"`+buttonStyle+` `+productPriceStr+`\">`+buttonText+`</a>`;
 
-                    templateCheckout = `<a href=\"#calc-dialog-`+productPrice+`\" id=\"skye-tag-button\" class=\"`+buttonStyle+` `+productPrice+`\">`+buttonText+`</a>`;
+                    templateCheckout = `<a href=\"#calc-dialog-`+productPriceStr+`\" id=\"skye-tag-button\" class=\"`+buttonStyle+` `+productPriceStr+`\">`+buttonText+`</a>`;
 
                 } else {
                     if (mode == 'inpage')
                     {
                         template = '<div id="in-page" class="iframe-container"><iframe src=\"'+Config.calcInfoUrl+'?id='+merchantId+'&productPrice='+productPrice+'&mode='+mode+'&terms='+term+'\" frameborder="0" scrolling="no" /></div></div>'
                     } else {
-                        template = `<a href=\"#calc-dialog-`+productPrice+`\" id=\"skye-tag\" class=\"`+productPrice+`\">
+                        template = `<a href=\"#calc-dialog-`+productPriceStr+`\" id=\"skye-tag\" class=\"`+productPriceStr+`\">
                             <p>or `+productPriceDivisor.toString()+` monthly payments of <b>$${roundedDownProductPrice.toFixed(2)}</b></p><p>Interest free with <img src=\"`+Config.baseContentUrl+`/content/images/skye_logo_63x12.png\"> <span class="more-info">more info</span></p>
                             <br>
                         </a>`;
 
-                        templateCheckout = `<a href=\"#calc-dialog-`+productPrice+`\" id=\"skye-tag\" class=\"`+productPrice+`\">
+                        templateCheckout = `<a href=\"#calc-dialog-`+productPriceStr+`\" id=\"skye-tag\" class=\"`+productPriceStr+`\">
                             <p>`+productPriceDivisor.toString()+` monthly payments of <b>$${roundedDownProductPrice.toFixed(2)}</b></p><p>Interest free with <img src=\"`+Config.baseContentUrl+`/content/images/skye_logo_63x12.png\"> <span class="more-info">more info</span></p>
                         </a>`;
 
-                        templatenologo = `<a href=\"#skye-dialog-`+productPrice+`\" id=\"skye-tag\" class=\"`+productPrice+`\">\n<p>or <b>$${roundedDownProductPrice.toFixed(2)}</b>/month </p></a>`;
+                        templatenologo = `<a href=\"#skye-dialog-`+productPriceStr+`\" id=\"skye-tag\" class=\"`+productPriceStr+`\">\n<p>or <b>$${roundedDownProductPrice.toFixed(2)}</b>/month </p></a>`;
                     }
                 }
             }
@@ -261,10 +270,10 @@ function getCurrentScript(): any {
     return currentScript;
 }
 
-function updatePrice(el: JQuery, jq: JQueryStatic, noLogo: boolean, min: number, max: number, used_in: string, merchantId: string, term: string, mode: string, buttonStyle: string, buttonText: string) {
+function updatePrice(el: JQuery, jq: JQueryStatic, noLogo: boolean, min: number, max: number, used_in: string, merchantId: string, term: string, mode: string, buttonStyle: string, buttonText: string, skyePlansUrl: string) {
     let productPrice = extractPrice(el);
     let parent =  jq(getCurrentScript()).parent();
-    jq.when(manyRequests(merchantId, productPrice, Config.skyePlansUrl)).then( function (skyePlans: SkyePlan) {                        
+    jq.when(manyRequests(merchantId, productPrice, skyePlansUrl)).then( function (skyePlans: SkyePlan) {                        
         const template: string = generateWidget(merchantId, skyePlans, productPrice, noLogo, min, max, used_in, term, mode, buttonStyle, buttonText);
         
         if (Object.keys(skyePlans).length > 0)

@@ -13,6 +13,7 @@ export class ModalInjector {
     }
 
     public injectBanner(template: string, targetUrl: string, productPrice: string, merchantId: string, term: string, element?: JQuery) {
+        productPrice = productPrice.toString();
         if (!this.modalExists(targetUrl)) {
             this.injectModal(targetUrl, productPrice, merchantId, term);
         }
@@ -46,13 +47,14 @@ export class ModalInjector {
         let modalId = this.getModalId(url);
         let termValue = term? '&terms='+term : '';
         let modalStyle = '';
+        let productPriceStr = productPrice.replace('.','-');
 
         if (modalId == 'calc-dialog-'){
             modalStyle = 'height: 940px; max-width: 700px;';
         }        
         const bodyTag = 'body';
         const modalDiv =
-            `<div id='${modalId}${productPrice}' class='modal widget' style=\"`+modalStyle+`\">
+            `<div id='${modalId}${productPriceStr}' class='modal widget' style=\"`+modalStyle+`\">
                 <div class="iframe-container">
                     <iframe src='${url}?id=${merchantId}`+termValue+`&productPrice=`+productPrice+`' frameborder="0" scrolling="no"></iframe>
                 </div>                
