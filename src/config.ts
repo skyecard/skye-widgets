@@ -6,8 +6,8 @@
 
 export class Config {
     //public static baseContentUrl = 'http://widgets.skyecard.com.au.s3-ap-southeast-2.amazonaws.com';    // for remote deploy
-    //public static baseContentUrl = 'https://d1y94doel0eh42.cloudfront.net'; 
-    public static baseContentUrl = './dist';       // for local testing
+    public static baseContentUrl = 'https://d1y94doel0eh42.cloudfront.net'; 
+    //public static baseContentUrl = './dist';       // for local testing
     //Skye plans url
     // Point to UAT
     //public static skyePlansUrl = 'https://0eyvhkany4.execute-api.ap-southeast-2.amazonaws.com/dev/';    

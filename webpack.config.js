@@ -4,7 +4,8 @@ var CopyWebpackPlugin = require('copy-webpack-plugin');
 module.exports = {
      entry: {
         "/content/scripts/skye-widget": "./src/skye-widget.ts",
-        "/content/scripts/skye-calc": "./src/skye-calc.ts"
+        "/content/scripts/skye-calc": "./src/skye-calc.ts",
+        "/content/scripts/skye-landing": "./src/skye-landing.ts"
      },
      output: {
         path: path.join(__dirname, "dist"),

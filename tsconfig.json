@@ -13,6 +13,7 @@
     "./src/skye-calc.ts",
     "./src/config.ts",
     "./src/modal-injector.ts",
+    "./src/skye-landing.ts",
   ],
   "compileOnSave": true
 }
