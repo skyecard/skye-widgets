@@ -66,7 +66,7 @@ a#skye-tag {
     height: 85%;
 }
 
-.jquery-modal .modal.widget a.close-modal {
+.jquery-modal .skyeModal.widget a.close-skyeModal {
     top: 10.5px;
     right: 10.5px;
     background-image: url(//d1y94doel0eh42.cloudfront.net/content/images/X.png);
@@ -74,14 +74,14 @@ a#skye-tag {
 }
 
 @media screen and (max-width:576px) {
-    .jquery-modal .modal.widget {
+    .jquery-modal .skyeModal.widget {
         height: 1500px;
         max-width: 380px;
     }
 }
 
 @media screen and (min-width:576px) {
-    .jquery-modal .modal.widget {
+    .jquery-modal .skyeModal.widget {
         /*height: 940px;*/
         height: 1000px;
         max-width: 940px;
@@ -89,7 +89,7 @@ a#skye-tag {
 }
 
 @media screen and (max-width:480px) {
-    .jquery-modal .modal.widget {        
+    .jquery-modal .skyeModal.widget {        
         /*max-width: 370px;*/
         height: 1500px;
         overflow-y: scroll;
@@ -100,4 +100,9 @@ a#skye-tag {
 
 .jquery-modal.blocker.current { 
    z-index: 1050;
+}
+
+/* To supprt magento static widget price info*/
+a#skye-tag img{
+    display: inline-block;
 }

@@ -148,7 +148,7 @@ a.button-gradient:hover, a.button-gradient:focus, a.button-gradient:active {
     height: 85%;
 }
 
-.jquery-modal .modal a.close-modal {
+.jquery-modal .skyeModal a.close-skyeModal {
     top: 10.5px;
     right: 10.5px;
     background-image: url(//d1y94doel0eh42.cloudfront.net/content/images/X.png);
@@ -157,4 +157,9 @@ a.button-gradient:hover, a.button-gradient:focus, a.button-gradient:active {
 
 #in-page {
     min-height: 450px;
+}
+
+/* To supprt magento static widget price info*/
+a#skye-tag img{
+    display: inline;
 }

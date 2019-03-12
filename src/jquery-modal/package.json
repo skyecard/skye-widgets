@@ -1,0 +1,7 @@
+{
+  "name": "jquery-modal",
+  "version": "0.0.1",
+  "main": "jquery.skyeModal.js",
+  "style": "jquery.modal.css",
+  "description": "Modified jquery-modal from https://github.com/kylefox/jquery-modal"  
+}

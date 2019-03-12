@@ -1,7 +1,8 @@
 ///<reference path="../typings/jquery/jquery.d.ts"/>
 ///<reference path="../typings/skye.d.ts"/>
 require('jquery');
-require('jquery-modal');
+//require('jquery-modal');
+require('./jquery-modal');
 // styles
 require('../css/jquery.modal.css');
 require('../css/styles-widget.css');
@@ -12,9 +13,10 @@ export class ModalInjector {
     constructor(private jQuery: JQueryStatic) {
     }
 
-    public injectBanner(template: string, targetUrl: string, productPrice: string, merchantId: string, term: string, element?: JQuery) {
+    public injectBanner(template: string, targetUrl: string, productPrice: string, merchantId: string, term: string, prevProductPrice: string, element?: JQuery) {
+
         productPrice = productPrice.toString();
-        if (!this.modalExists(targetUrl)) {
+        if (!this.modalExists(targetUrl, productPrice, prevProductPrice.toString())) {          
             this.injectModal(targetUrl, productPrice, merchantId, term);
         }
 
@@ -23,24 +25,27 @@ export class ModalInjector {
             return scripts[scripts.length - 1];
         })();
         
+        
         // if the element isn't passed in already
-        if (!element) {        
+        if (!element) {      
             element = this.jQuery(currentScript);
         }
 
         // look for the id , if it exists then we replace the element
         // this could cause issues with multiple entries.. @todo make element id dynamic
-        if (this.jQuery('#skye-tag-'+productPrice, element).length > 0) {
-            this.jQuery('#skye-tag-'+productPrice, element).replaceWith(template);
-        } else {
+        if (this.jQuery('.'+productPrice, element).length > 0) {
+            this.jQuery('.'+productPrice, element).replaceWith(template);
+        } else {  
+            element.next().remove();
+            //element.after(template);
             element.first().after(template);
         }
 
     }
 
-    private modalExists(url: string): boolean {
+    private modalExists(url: string, productPrice: string, prevProductPrice: string): boolean {
         let modalId = this.getModalId(url); //Element selector
-        return this.jQuery("#" + modalId) ? this.jQuery("#" + modalId).length > 0 : false;
+        return this.jQuery('#' + modalId + productPrice) ? this.jQuery('#' + modalId + productPrice).length > 0 : false;
     }
 
     private injectModal(url: string, productPrice: string, merchantId: string, term: string): void {
@@ -54,7 +59,7 @@ export class ModalInjector {
         }        
         const bodyTag = 'body';
         const modalDiv =
-            `<div id='${modalId}${productPriceStr}' class='modal widget' style=\"`+modalStyle+`\">
+            `<div id='${modalId}${productPriceStr}' class='skyeModal widget' style=\"`+modalStyle+`\">
                 <div class="iframe-container">
                     <iframe src='${url}?id=${merchantId}`+termValue+`&productPrice=`+productPrice+`' frameborder="0" scrolling="no"></iframe>
                 </div>                
@@ -64,8 +69,9 @@ export class ModalInjector {
     }
 
     private getModalId(url: string): string {
+        
         let modalId = '';
-        if (url.indexOf('calculator') > 0) {
+        if (url.indexOf('calc') > 0) {
             modalId = Config.calcInfoModalId;
         }        
         else {
