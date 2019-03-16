@@ -137,7 +137,7 @@
 			};
 			var amtValue = inputAmount.value;			
 			var scriptEl = document.createElement('script');			
-			scriptEl.setAttribute('src','https://seohn3f7dc.execute-api.ap-southeast-2.amazonaws.com/prod/?id='+qs.id+'&amount='+amtValue+'&callback=jsonpCallback');
+			scriptEl.setAttribute('src','https://seohn3f7dc.execute-api.ap-southeast-2.amazonaws.com/prod/?id='+qs.id+'&amount='+amtValue+'&term=&callback=jsonpCallback');
 
 			document.body.appendChild(scriptEl);
 		} else {

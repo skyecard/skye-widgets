@@ -13,11 +13,11 @@ export class ModalInjector {
     constructor(private jQuery: JQueryStatic) {
     }
 
-    public injectBanner(template: string, targetUrl: string, productPrice: string, merchantId: string, term: string, prevProductPrice: string, element?: JQuery) {
+    public injectBanner(template: string, targetUrl: string, productPrice: string, merchantId: string, term: string, intRate: string, prevProductPrice: string, element?: JQuery) {
 
         productPrice = productPrice.toString();
         if (!this.modalExists(targetUrl, productPrice, prevProductPrice.toString())) {          
-            this.injectModal(targetUrl, productPrice, merchantId, term);
+            this.injectModal(targetUrl, productPrice, merchantId, term, parseFloat(intRate));
         }
 
         let currentScript = document.currentScript || (function () {
@@ -48,7 +48,7 @@ export class ModalInjector {
         return this.jQuery('#' + modalId + productPrice) ? this.jQuery('#' + modalId + productPrice).length > 0 : false;
     }
 
-    private injectModal(url: string, productPrice: string, merchantId: string, term: string): void {
+    private injectModal(url: string, productPrice: string, merchantId: string, term: string, intRate: number): void {
         let modalId = this.getModalId(url);
         let termValue = term? '&terms='+term : '';
         let modalStyle = '';
@@ -61,7 +61,7 @@ export class ModalInjector {
         const modalDiv =
             `<div id='${modalId}${productPriceStr}' class='skyeModal widget' style=\"`+modalStyle+`\">
                 <div class="iframe-container">
-                    <iframe src='${url}?id=${merchantId}`+termValue+`&productPrice=`+productPrice+`' frameborder="0" scrolling="no"></iframe>
+                    <iframe src='${url}?id=${merchantId}`+termValue+`&productPrice=`+productPrice+`&int=`+intRate+`' frameborder="0" scrolling="no"></iframe>
                 </div>                
             </div>`;
         const body = this.jQuery(bodyTag);
@@ -69,7 +69,6 @@ export class ModalInjector {
     }
 
     private getModalId(url: string): string {
-        
         let modalId = '';
         if (url.indexOf('calc') > 0) {
             modalId = Config.calcInfoModalId;

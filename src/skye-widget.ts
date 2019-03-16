@@ -1,4 +1,5 @@
 import * as jq from 'jquery';
+const { detect } = require('detect-browser');
 import { ModalInjector } from './modal-injector';
 import { Config } from './config';
 
@@ -39,10 +40,11 @@ let widget;
     let used_in: string;
     let element: any;    
     let skyePlansUrl: string;
+    let intRate: string;
 
     // Append widget to element
     let target: any;
-
+    let browser = detect();
     /**
      * The extracted product price from either parsing the content from HTML (via css selector)
      * or a specifically passed in value
@@ -89,23 +91,44 @@ let widget;
         priceStr = priceStr.replace(/^\D+/, '');
         productPrice = parseFloat(priceStr.replace(',', ''));
         if (term)
-        {    
-            let skyePlans = [];
-            const template: string = generateWidget(skyePlans, productPrice, noLogo, min, max, used_in, term, mode);
-            widget.injectBanner(template, Config.priceInfoUrl, productPrice, merchantId, term, prevProductPrice = 0, element);
+        {   
+            if (parseInt(term) > 12) 
+            {
+                jq.when(manyRequests(merchantId, productPrice, term, skyePlansUrl)).then( function (skyePlans: SkyePlan) {    
+                                
+                    const template: string = generateWidget(skyePlans, productPrice, noLogo, min, max, used_in, term, mode);
+                    
+                    if (Object.keys(skyePlans).length > 0)
+                    {            
+                        term? term : term = skyePlans[Object.keys(skyePlans).length - 1].PrefIntPeriod;
+                        intRate = skyePlans[Object.keys(skyePlans).length - 1].PrefIntRate;
+                        widget.injectBanner(template, Config.priceInfoUrl, productPrice, merchantId, term, intRate, prevProductPrice = 0, element);
+                    } else {
+                        if (term)
+                        {
+                          widget.injectBanner(template, Config.priceInfoUrl, productPrice, merchantId, term, intRate = '0', prevProductPrice = 0, element);
+                        } 
+                    }
+                })
+            }else{
+                let skyePlans = [];
+                const template: string = generateWidget(skyePlans, productPrice, noLogo, min, max, used_in, term, mode);
+                widget.injectBanner(template, Config.priceInfoUrl, productPrice, merchantId, term, intRate = '0', prevProductPrice = 0, element);
+            }
         }else{  
-            jq.when(manyRequests(merchantId, productPrice, skyePlansUrl)).then( function (skyePlans: SkyePlan) {    
+            jq.when(manyRequests(merchantId, productPrice, term, skyePlansUrl)).then( function (skyePlans: SkyePlan) {    
                                 
                 const template: string = generateWidget(skyePlans, productPrice, noLogo, min, max, used_in, term, mode);
                     
                 if (Object.keys(skyePlans).length > 0)
                 {            
                     term? term : term = skyePlans[Object.keys(skyePlans).length - 1].PrefIntPeriod;
-                    widget.injectBanner(template, Config.priceInfoUrl, productPrice, merchantId, term, prevProductPrice = 0, element);
+                    intRate = skyePlans[Object.keys(skyePlans).length - 1].PrefIntRate;
+                    widget.injectBanner(template, Config.priceInfoUrl, productPrice, merchantId, term, intRate, prevProductPrice = 0, element);
                 } else {
                     if (term)
                     {
-                      widget.injectBanner(template, Config.priceInfoUrl, productPrice, merchantId, term, prevProductPrice = 0, element);
+                      widget.injectBanner(template, Config.priceInfoUrl, productPrice, merchantId, term, intRate = '0', prevProductPrice = 0, element);
                     } 
                 }
             })
@@ -130,24 +153,45 @@ let widget;
             {
                 if (term)
                 {
-                    let skyePlans = [];
-                    const template: string = generateWidget(skyePlans, productPrice, noLogo, min, max, used_in, term, mode);
-                    widget.injectBanner(template, Config.priceInfoUrl, productPrice, merchantId, term, prevProductPrice = 0, element);
+                    if (parseInt(term) > 12) 
+                    {
+                        jq.when(manyRequests(merchantId, productPrice, term, skyePlansUrl)).then( function (skyePlans: SkyePlan) {    
+                                
+                            const template: string = generateWidget(skyePlans, productPrice, noLogo, min, max, used_in, term, mode);
+                    
+                            if (Object.keys(skyePlans).length > 0)
+                            {            
+                                term? term : term = skyePlans[Object.keys(skyePlans).length - 1].PrefIntPeriod.toString();
+                                intRate = skyePlans[Object.keys(skyePlans).length - 1].PrefIntRate;
+                                widget.injectBanner(template, Config.priceInfoUrl, productPrice, merchantId, term, intRate, prevProductPrice = 0, element);
+                            } else {
+                                if (term)
+                                {
+                                    widget.injectBanner(template, Config.priceInfoUrl, productPrice, merchantId, term, intRate = '0', prevProductPrice = 0, element);
+                                } 
+                            }
+                        })
+                    }else{
+                        let skyePlans = [];
+                        const template: string = generateWidget(skyePlans, productPrice, noLogo, min, max, used_in, term, mode);
+                        widget.injectBanner(template, Config.priceInfoUrl, productPrice, merchantId, term, intRate = '0', prevProductPrice = 0, element);
+                    }
                 }else{
-                    jq.when(manyRequests(merchantId, productPrice, skyePlansUrl)).then( function (skyePlans: SkyePlan) {                        
+                    jq.when(manyRequests(merchantId, productPrice, term, skyePlansUrl)).then( function (skyePlans: SkyePlan) {                        
                         const template: string = generateWidget(skyePlans, productPrice, noLogo, min, max, used_in, term, mode);  
                         if (Object.keys(skyePlans).length > 0)
                         {            
                             term? term : term = skyePlans[Object.keys(skyePlans).length - 1].PrefIntPeriod.toString();
-                            widget.injectBanner(template, Config.priceInfoUrl, productPrice, merchantId, term, prevProductPrice = 0, element);
+                            intRate = skyePlans[Object.keys(skyePlans).length - 1].PrefIntRate;
+                            widget.injectBanner(template, Config.priceInfoUrl, productPrice, merchantId, term, intRate, prevProductPrice = 0, element);
                         } else {
                             if (term)
                             {
-                                widget.injectBanner(template, Config.priceInfoUrl, productPrice, merchantId, term, prevProductPrice = 0, element);
+                                widget.injectBanner(template, Config.priceInfoUrl, productPrice, merchantId, term, intRate = '0', prevProductPrice = 0, element);
                             } 
                         }
 
-                })
+                    })
                 }
             }
             // register event handler to update the price
@@ -191,8 +235,18 @@ let widget;
 
     
     jq(document).on('click','.'+productPrice.toString().replace('.','-'), function() {
-        $(this).skyeModal();         
-        return false;   
+        console.log('height:'+$(this).height());
+        console.log('wheight:'+$(window).height());
+        console.log('width:'+$(this).width());
+        console.log(browser.name+' '+browser.os);
+        if (merchantId == 'E0843' && (browser.os == 'iOS' || browser.os == 'Android OS' || browser.os == 'BlackBerry OS' || browser.os == 'Windows Mobile' || browser.os == 'Amazon OS'))
+        {
+            console.log('redirect');
+            window.open('https://apply.flexicards.com.au/seller='+merchantId, '_blank', '', false);
+        }else{
+           $(this).skyeModal();         
+           return false;
+        } 
     })
     jq(document).on('click','a', function() {                
         if (monitor){            
@@ -202,8 +256,14 @@ let widget;
             let clickClass = checkProductPrice.toString().replace('.','-')
             if ($(this).attr('class') == clickClass)
             {
-                $(this).skyeModal();         
-                return false;
+                if (merchantId == 'E0843' && (browser.os == 'iOS' || browser.os == 'Android OS' || browser.os == 'BlackBerry OS' || browser.os == 'Windows Mobile' || browser.os == 'Amazon OS'))
+                {
+                    console.log('redirect');
+                    window.open('https://apply.flexicards.com.au/seller='+merchantId, '_blank', '', false);
+                }else{
+                    $(this).skyeModal();         
+                    return false;
+                }
             }
         }   
     })
@@ -230,42 +290,62 @@ function generateWidget(skyePlans: SkyePlan, productPrice: number, noLogo: boole
     let templateCheckout;
     let templatenologo;
     let templateList;
+    let productPriceDividedBy;
     let productPriceDivisor;
+    let interestFreeStr = '';  
+    let prefIntRate;   
     let productPriceStr = productPrice.toString().replace('.','-');
+
+    if (Object.keys(skyePlans).length > 0)
+    {
+        prefIntRate = skyePlans[Object.keys(skyePlans).length - 1].PrefIntRate;
+    } else {
+        prefIntRate = 0;
+    }
     
     term? productPriceDivisor = term : productPriceDivisor = skyePlans[Object.keys(skyePlans).length - 1].PrefIntPeriod;
-    
+
+    if (parseFloat(prefIntRate) == 0)
+    {
+        interestFreeStr = 'Interest free ';
+    }
     if (productPrice < min){
         template = `<a href=\"#skye-dialog-`+productPriceStr+`\" class=\"`+productPriceStr+`\" id=\"skye-tag\">
-                            <p>or </p><p>Interest free with&nbsp;&nbsp;<img src=\"`+Config.baseContentUrl+`/content/images/skye_logo_63x12.png\"></p>
+                            <p>`+interestFreeStr+`with&nbsp;&nbsp;<img src=\"`+Config.baseContentUrl+`/content/images/skye_logo_63x12.png\"></p>
                             <br>
                         </a>`;
 
         templateCheckout = `<a href=\"#skye-dialog-`+productPriceStr+`\" class=\"`+productPriceStr+`\" id=\"skye-tag\">
-                            <p>Interest free with&nbsp;&nbsp;<img src=\"`+Config.baseContentUrl+`/content/images/skye_logo_63x12.png\"></p>
+                            <p>`+interestFreeStr+`with&nbsp;&nbsp;<img src=\"`+Config.baseContentUrl+`/content/images/skye_logo_63x12.png\"></p>
                         </a>`;
 
-        templatenologo = `<a href=\"#skye-dialog-`+productPriceStr+`\" id=\"skye-tag\" class=\"`+productPriceStr+`\">\n<p>or <b>Interest free</b></p></a>`;
+        templatenologo = `<a href=\"#skye-dialog-`+productPriceStr+`\" id=\"skye-tag\" class=\"`+productPriceStr+`\">\n<p>or <b>*Interest free</b></p></a>`;
 
-        templateList = `<a href=\"#skye-dialog-`+productPriceStr+`\" id=\"skye-tag\" class=\"`+productPriceStr+`\">\n<p>or <b>Interest free</b></p></a>`;
+        templateList = `<a href=\"#skye-dialog-`+productPriceStr+`\" id=\"skye-tag\" class=\"`+productPriceStr+`\">\n<p>or <b>*Interest free</b></p></a>`;
     }
     else if (productPrice <= max) {
-        
-            let productPriceDividedBy = productPrice / productPriceDivisor;
+
+            if (parseFloat(prefIntRate) == 0)
+            {
+                productPriceDividedBy = productPrice / productPriceDivisor;
+            } else {
+                /*productPriceDividedBy = (productPrice + (productPrice * (parseFloat(prefIntRate)/100+1))) / productPriceDivisor;*/
+                productPriceDividedBy = -pmt((parseFloat(prefIntRate)/100)/12,term,productPrice,0,0);
+            }
 
             // Banking Rounding
-            let roundedDownProductPrice = Math.floor( productPriceDividedBy * Math.pow(10, 2) ) / Math.pow(10, 2);
+            let roundedDownProductPrice = Math.floor( productPriceDividedBy * Math.pow(10, 3) ) / Math.pow(10, 3);
             // Compute for weekly
             if (mode == 'weekly')
             {
                 let weeklyRoundedDownProductPrice = Math.floor((roundedDownProductPrice * 12/52) * Math.pow(10,2)) / Math.pow(10, 2);
                 template = `<a href=\"#skye-dialog-`+productPriceStr+`\" class=\"`+productPriceStr+`\" id=\"skye-tag\">
-                            <p>or <b>$${weeklyRoundedDownProductPrice.toFixed(2)}</b> weekly payments </p><p>Interest free with&nbsp;&nbsp;<img src=\"`+Config.baseContentUrl+`/content/images/skye_logo_63x12.png\">&nbsp;&nbsp;<span class="more-info">more info</span></p>
+                            <p>or <b>$${weeklyRoundedDownProductPrice.toFixed(2)}</b> weekly payments </p><p>`+interestFreeStr+`with&nbsp;&nbsp;<img src=\"`+Config.baseContentUrl+`/content/images/skye_logo_63x12.png\">&nbsp;&nbsp;<span class="more-info">more info</span></p>
                             <br>
                         </a>`;
 
                 templateCheckout = `<a href=\"#skye-dialog-`+productPriceStr+`\" class=\"`+productPriceStr+`\" id=\"skye-tag\">
-                            <p><b>$${weeklyRoundedDownProductPrice.toFixed(2)}</b> weekly payments </p><p>Interest free with&nbsp;&nbsp;<img src=\"`+Config.baseContentUrl+`/content/images/skye_logo_63x12.png\">&nbsp;&nbsp;<span class="more-info">more info</span></p>
+                            <p><b>$${weeklyRoundedDownProductPrice.toFixed(2)}</b> weekly payments </p><p>`+interestFreeStr+`with&nbsp;&nbsp;<img src=\"`+Config.baseContentUrl+`/content/images/skye_logo_63x12.png\">&nbsp;&nbsp;<span class="more-info">more info</span></p>
                         </a>`;
 
                 templatenologo = `<a href=\"#skye-dialog-`+productPriceStr+`\" id=\"skye-tag\" class=\"`+productPriceStr+`\">\n<p>or <b>$`+weeklyRoundedDownProductPrice.toFixed(2)+`</b>/week </p></a>`;
@@ -273,12 +353,12 @@ function generateWidget(skyePlans: SkyePlan, productPrice: number, noLogo: boole
                 templateList = `<a href=\"#skye-dialog-`+productPriceStr+`\" id=\"skye-tag\" class=\"`+productPriceStr+`\">\n<p>or <b>$`+weeklyRoundedDownProductPrice.toFixed(2)+`</b>/week&nbsp;<span class="more-info">more info</span></p></a>`;
             } else {
                 template = `<a href=\"#skye-dialog-`+productPriceStr+`\" class=\"`+productPriceStr+`\" id=\"skye-tag\">
-                            <p>or `+productPriceDivisor.toString()+` monthly payments of <b>$${roundedDownProductPrice.toFixed(2)}</b></p><p>Interest free with&nbsp;&nbsp;<img src=\"`+Config.baseContentUrl+`/content/images/skye_logo_63x12.png\">&nbsp;&nbsp;<span class="more-info">more info</span></p>
+                            <p>or `+productPriceDivisor.toString()+` monthly payments of <b>$${roundedDownProductPrice.toFixed(2)}</b></p><p>`+interestFreeStr+`with&nbsp;&nbsp;<img src=\"`+Config.baseContentUrl+`/content/images/skye_logo_63x12.png\">&nbsp;&nbsp;<span class="more-info">more info</span></p>
                             <br>
                         </a>`;
 
                 templateCheckout = `<a href=\"#skye-dialog-`+productPriceStr+`\" class=\"`+productPriceStr+`\" id=\"skye-tag\">
-                            <p>`+productPriceDivisor.toString()+` monthly payments of <b>$${roundedDownProductPrice.toFixed(2)}</b></p><p>Interest free with&nbsp;&nbsp;<img src=\"`+Config.baseContentUrl+`/content/images/skye_logo_63x12.png\">&nbsp;&nbsp;<span class="more-info">more info</span></p>
+                            <p>`+productPriceDivisor.toString()+` monthly payments of <b>$${roundedDownProductPrice.toFixed(2)}</b></p><p>`+interestFreeStr+`with&nbsp;&nbsp;<img src=\"`+Config.baseContentUrl+`/content/images/skye_logo_63x12.png\">&nbsp;&nbsp;<span class="more-info">more info</span></p>
                         </a>`;
 
                 templatenologo = `<a href=\"#skye-dialog-`+productPriceStr+`\" id=\"skye-tag\" class=\"`+productPriceStr+`\">\n<p>or <b>$${roundedDownProductPrice.toFixed(2)}</b>/month </p></a>`;
@@ -297,6 +377,23 @@ function generateWidget(skyePlans: SkyePlan, productPrice: number, noLogo: boole
             return (noLogo) ? templatenologo : template;
         }
     }
+}
+
+function pmt(rate_per_period, number_of_payments, present_value, future_value, type){
+    console.log('pmt rate:'+rate_per_period);
+    console.log('pmt terms:'+number_of_payments);
+    console.log('pmt amount:'+present_value);
+    if(rate_per_period != 0.0){
+        // Interest rate exists
+        var q = Math.pow(1 + rate_per_period, number_of_payments);
+        return -(rate_per_period * (future_value + (q * present_value))) / ((-1 + q) * (1 + rate_per_period * (type)));
+
+    } else if(number_of_payments != 0.0){
+        // No interest rate, but number of payments exists
+        return -(future_value + present_value) / number_of_payments;
+    }
+
+    return 0;
 }
 
 function getCurrentScript(): any {
@@ -321,23 +418,42 @@ function getCurrentScriptById(): any {
 function updatePrice(el: JQuery, jq: JQueryStatic, noLogo: boolean, min: number, max: number, used_in: string, merchantId: string, term: string, mode: string, skyePlansUrl: string, checkProductPrice: number) {
     let productPrice = extractPrice(el);
     let parent =  jq(getCurrentScriptById());        
-        
         if (term)
         {
-            let skyePlans = [];
-            const template: string = generateWidget(skyePlans, productPrice, noLogo, min, max, used_in, term, mode);  
-            widget.injectBanner(template, Config.priceInfoUrl, productPrice, merchantId, term, checkProductPrice, parent);            
+            if (parseInt(term) > 12) 
+            {
+                jq.when(manyRequests(merchantId, productPrice, term, skyePlansUrl)).then( function (skyePlans: SkyePlan) {                                   
+                    const template: string = generateWidget(skyePlans, productPrice, noLogo, min, max, used_in, term, mode);
+                    
+                    if (Object.keys(skyePlans).length > 0)
+                    {            
+                        term? term : term = skyePlans[Object.keys(skyePlans).length - 1].PrefIntPeriod;
+                        let intRate = skyePlans[Object.keys(skyePlans).length - 1].PrefIntRate;
+                        widget.injectBanner(template, Config.priceInfoUrl, productPrice, merchantId, term, intRate, checkProductPrice, parent);
+                    } else {
+                        if (term)
+                        {
+                            widget.injectBanner(template, Config.priceInfoUrl, productPrice, merchantId, term, '0', checkProductPrice, parent);
+                        } 
+                    }
+                })
+            }else{
+                let skyePlans = [];
+                const template: string = generateWidget(skyePlans, productPrice, noLogo, min, max, used_in, term, mode);  
+                widget.injectBanner(template, Config.priceInfoUrl, productPrice, merchantId, term, '0', checkProductPrice, parent);  
+            }          
         }else{
-            jq.when(manyRequests(merchantId, productPrice, skyePlansUrl)).then( function (skyePlans: SkyePlan) {                        
+            jq.when(manyRequests(merchantId, productPrice, term, skyePlansUrl)).then( function (skyePlans: SkyePlan) {                        
                 const template: string = generateWidget(skyePlans, productPrice, noLogo, min, max, used_in, term, mode);      
                 if (Object.keys(skyePlans).length > 0)
                 {            
                     term? term : term = skyePlans[Object.keys(skyePlans).length - 1].PrefIntPeriod;
-                    widget.injectBanner(template, Config.priceInfoUrl, productPrice, merchantId, term, checkProductPrice, parent);
+                    let intRate = skyePlans[Object.keys(skyePlans).length - 1].PrefIntRate;
+                    widget.injectBanner(template, Config.priceInfoUrl, productPrice, merchantId, term, intRate, checkProductPrice, parent);
                 } else {
                     if (term)
                     {
-                      widget.injectBanner(template, Config.priceInfoUrl, productPrice, merchantId, term, checkProductPrice, parent);
+                      widget.injectBanner(template, Config.priceInfoUrl, productPrice, merchantId, term, '0', checkProductPrice, parent);
                     } 
                 }
             })
@@ -359,20 +475,24 @@ function getParameterByName(name: string, url: string): string {
     return decodeURIComponent(results[2].replace(/\+/g, ' '));
 }
 
-function manyRequests(merchantId: string, productPrice: number, skyePlansUrl: string) {
+function manyRequests(merchantId: string, productPrice: number, term: string, skyePlansUrl: string) {
     var promise = jq.Deferred();
-    makeOneRequest(promise, merchantId, productPrice, skyePlansUrl);
+    if (term == null)
+    {
+        term = ''
+    }
+    makeOneRequest(promise, merchantId, productPrice, term, skyePlansUrl);
     return promise;
 }
 
-function makeOneRequest(promise: any, merchantId: string, productPrice: number, skyePlansUrl: string) {
+function makeOneRequest(promise: any, merchantId: string, productPrice: number, term: string, skyePlansUrl: string) {
     //console.log('ajax request:'+productPrice.toString())
     let productPriceString = productPrice.toString();
     jq.ajax({
         method: 'GET',
         async: false,            
         url: skyePlansUrl,      
-        data: 'id='+merchantId+'&amount='+productPriceString,
+        data: 'id='+merchantId+'&amount='+productPriceString+'&term='+term,
         dataType: "jsonp",                
         success: function (response) {             
             promise.resolve(response); 

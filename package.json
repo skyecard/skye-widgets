@@ -4,8 +4,10 @@
   "description": "Interactive drop in banners for Skye",
   "main": "skye-widget.js",
   "dependencies": {
+    "detect-browser": "^4.1.0",
     "jquery": "^3.1.1",
     "jquery-modal": "^0.9.1",
+    "magnific-popup": "^1.1.0",
     "sass": "^1.16.0"
   },
   "devDependencies": {
