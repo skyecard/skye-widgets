@@ -308,7 +308,9 @@ function generateWidget(merchantId: string, skyePlans: SkyePlan, productPrice: n
             // Compute for weekly
             if (mode == 'weekly')
             {
-                let weeklyRoundedDownProductPrice = Math.floor((roundedDownProductPrice * 12/52) * Math.pow(10,2)) / Math.pow(10, 2);
+                // Rounding to 2 decimal places
+                let weeklyRoundFigure = Math.floor(52/12 * Math.pow(10,2)) / Math.pow(10,2);
+                let weeklyRoundedDownProductPrice = Math.floor((roundedDownProductPrice / weeklyRoundFigure) * Math.pow(10,2)) / Math.pow(10, 2);
                 template = `<a href=\"#calc-dialog-`+productPriceStr+`\" id=\"skye-tag\" class=\"`+productPriceStr+`\">
                             <p>or <b>$${weeklyRoundedDownProductPrice.toFixed(2)}</b> weekly payments </p><p>Interest free with <img src=\"`+Config.baseContentUrl+`/content/images/skye_logo_63x12.png\"> <span class="more-info">more info</span></p>
                             <br>
