@@ -183,7 +183,8 @@
 	}
 
 	function compute_weekly(monthlyRoundedDownAmount) {
-		var weeklyRoundedDownAmount = Math.floor((monthlyRoundedDownAmount * 12/52) * Math.pow(10,2)) / Math.pow(10, 2);
+		var weeklyRoundFigure = Math.floor(52/12 * Math.pow(10,2)) / Math.pow(10,2);
+		var weeklyRoundedDownAmount = Math.floor((monthlyRoundedDownAmount / weeklyRoundFigure) * Math.pow(10,2)) / Math.pow(10, 2);
 
 		return weeklyRoundedDownAmount
 
